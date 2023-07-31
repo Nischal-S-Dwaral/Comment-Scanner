@@ -28,6 +28,9 @@ dependencies {
 	testCompileOnly 'org.projectlombok:lombok:1.18.22'
 	testAnnotationProcessor 'org.projectlombok:lombok:1.18.22'
 	implementation 'commons-io:commons-io:2.11.0'
+	implementation 'org.kohsuke:github-api:1.315'
+	implementation 'com.github.javaparser:javaparser-core:3.25.4'
+	implementation 'com.google.firebase:firebase-admin:9.1.1'
 }
 
 tasks.named('test') {

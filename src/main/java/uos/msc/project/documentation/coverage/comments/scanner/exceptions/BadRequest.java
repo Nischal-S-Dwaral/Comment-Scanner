@@ -42,7 +42,7 @@ public class BadRequest extends CustomException implements Supplier {
     /**
      * {@inheritDoc}
      *
-     * Returns {@code null} in this implementation.
+     * @return Returns {@code null} in this implementation.
      */
     @Override
     public Object get() {

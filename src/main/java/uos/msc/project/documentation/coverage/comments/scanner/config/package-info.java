@@ -1,0 +1,1 @@
+package uos.msc.project.documentation.coverage.comments.scanner.config;
