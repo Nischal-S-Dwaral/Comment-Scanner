@@ -1,6 +1,5 @@
 package uos.msc.project.documentation.coverage.comments.scanner.service;
 
-import java.io.IOException;
 import uos.msc.project.documentation.coverage.comments.scanner.model.RestApiResponse;
 import jakarta.servlet.http.HttpServletRequest;
 
@@ -20,9 +19,8 @@ public interface IUseCaseImplementation<R, S, T extends RestApiResponse> {
    *
    * @param request The HTTP request to be pre-processed.
    * @return The pre-processed data.
-   * @throws IOException If an I/O error occurs during pre-processing.
    */
-  R preProcess(HttpServletRequest request) throws IOException;
+  R preProcess(HttpServletRequest request);
 
   /**
    * Processes the pre-processed data and returns the processed data.
@@ -47,9 +45,8 @@ public interface IUseCaseImplementation<R, S, T extends RestApiResponse> {
    *
    * @param request The HTTP request to execute the use case.
    * @return The response generated after post-processing.
-   * @throws IOException If an I/O error occurs during pre-processing.
    */
-  default T execute(HttpServletRequest request) throws IOException {
+  default T execute(HttpServletRequest request) {
     return postProcess(process(preProcess(request)));
   }
 }

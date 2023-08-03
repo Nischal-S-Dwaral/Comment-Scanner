@@ -8,7 +8,11 @@ public enum ServiceEnum {
   /**
    * Represents the JAVA service.
    */
-  JAVA("java");
+  JAVA("java"),
+  /**
+   * Represents the PROJECT service.
+   */
+  PROJECT("project");
 
   /**
    * The name of the service.

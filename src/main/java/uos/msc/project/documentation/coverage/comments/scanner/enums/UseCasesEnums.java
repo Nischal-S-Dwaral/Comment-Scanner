@@ -11,7 +11,16 @@ public enum UseCasesEnums {
     /**
      * Represents the ADD_SPRING_BOOT use case.
      */
-    ADD_SPRING_BOOT("addSpringBoot");
+    ADD_SPRING_BOOT("addSpringBoot"),
+    /**
+     * Represents the ADD use case.
+     */
+    ADD("add"),
+    /**
+     * Represents the GET_LIST use case
+     */
+    GET_LIST("getList"),
+    ;
 
     /**
      * The name of the use case.
