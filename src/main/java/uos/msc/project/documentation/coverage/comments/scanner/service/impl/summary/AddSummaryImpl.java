@@ -10,7 +10,7 @@ import uos.msc.project.documentation.coverage.comments.scanner.entity.SummaryEnt
 import uos.msc.project.documentation.coverage.comments.scanner.enums.ServiceEnum;
 import uos.msc.project.documentation.coverage.comments.scanner.enums.UseCasesEnums;
 import uos.msc.project.documentation.coverage.comments.scanner.exceptions.BadRequest;
-import uos.msc.project.documentation.coverage.comments.scanner.model.summary.AddSummaryResponse;
+import uos.msc.project.documentation.coverage.comments.scanner.model.summary.add.AddSummaryResponse;
 import uos.msc.project.documentation.coverage.comments.scanner.repository.ProjectRepository;
 import uos.msc.project.documentation.coverage.comments.scanner.repository.SummaryRepository;
 import uos.msc.project.documentation.coverage.comments.scanner.service.IUseCaseImplementation;
@@ -71,7 +71,8 @@ public class AddSummaryImpl implements IUseCaseImplementation<
         ProjectEntity project = projectRepository.findById(projectId);
         int coverage = getAndUpdateDirectoryCoverage.calculateDirectoryScore(projectId);
 
-        SummaryEntity summaryEntity = new SummaryEntity(projectId, Timestamp.now(), coverage, project.getRepository());
+        SummaryEntity summaryEntity = new SummaryEntity(
+                projectId, Timestamp.now(), coverage, project.getRepository(), project.getUserId());
         return summaryRepository.add(summaryEntity);
     }
 

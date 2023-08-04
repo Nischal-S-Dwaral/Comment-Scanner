@@ -53,7 +53,7 @@ public class SummaryRepository {
      * @return list of summaries for the project
      * @throws InternalServerError If failed to get the document list from Firestore
      */
-    public List<SummaryEntity> getSummaryEntityList(String projectId) {
+    public List<SummaryEntity> getByProjectId(String projectId) {
         try {
             Firestore firestore = FirestoreClient.getFirestore();
             CollectionReference databaseReference  = firestore.collection(CollectionEnums.SUMMARY.getCollection());
@@ -67,6 +67,28 @@ public class SummaryRepository {
                     .toList();
         } catch (ExecutionException | InterruptedException exception) {
             throw new InternalServerError("Failed to get summary list from Firestore for project id- "+projectId+ " :"+exception.getMessage());
+        }
+    }
+
+    /**
+     * @param userId id of the user
+     * @return list of summaries for the user
+     * @throws InternalServerError If failed to get the document list from Firestore
+     */
+    public List<SummaryEntity> getByUserId(String userId) {
+        try {
+            Firestore firestore = FirestoreClient.getFirestore();
+            CollectionReference databaseReference  = firestore.collection(CollectionEnums.SUMMARY.getCollection());
+            ApiFuture<QuerySnapshot> querySnapshotApiFuture = databaseReference.whereEqualTo("userId", userId)
+                    .orderBy(FieldPath.documentId())
+                    .get();
+            List<QueryDocumentSnapshot> queryDocumentSnapshotList = querySnapshotApiFuture.get().getDocuments();
+
+            return queryDocumentSnapshotList.stream()
+                    .map(data -> data.toObject(SummaryEntity.class))
+                    .toList();
+        } catch (ExecutionException | InterruptedException exception) {
+            throw new InternalServerError("Failed to get summary list from Firestore for user id- "+userId+ " :"+exception.getMessage());
         }
     }
 }

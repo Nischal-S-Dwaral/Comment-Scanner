@@ -16,7 +16,11 @@ public enum ServiceEnum {
   /**
    * Represents the SUMMARY service.
    */
-  SUMMARY("summary");
+  SUMMARY("summary"),
+  /**
+   * Represents the QUALITY_GATE service.
+   */
+  QUALITY_GATE("qualityGate");
 
   /**
    * The name of the service.

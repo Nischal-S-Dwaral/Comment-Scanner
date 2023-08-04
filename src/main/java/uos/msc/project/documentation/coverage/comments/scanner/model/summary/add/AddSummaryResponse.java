@@ -1,4 +1,4 @@
-package uos.msc.project.documentation.coverage.comments.scanner.model.summary;
+package uos.msc.project.documentation.coverage.comments.scanner.model.summary.add;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

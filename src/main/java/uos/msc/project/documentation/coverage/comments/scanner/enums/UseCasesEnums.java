@@ -20,6 +20,14 @@ public enum UseCasesEnums {
      * Represents the GET_LIST use case
      */
     GET_LIST("getList"),
+    /**
+     * Represents the GET_BY_USER_ID use case
+     */
+    GET_BY_USER_ID("getByUserId"),
+    /**
+     * Represents the GET_BY_PROJECT_ID use case
+     */
+    GET_BY_PROJECT_ID("getByProjectId"),
     ;
 
     /**

@@ -24,7 +24,11 @@ public enum CollectionEnums {
     /**
      * Represents the SummaryEntity's collection
      */
-    SUMMARY("summary");
+    SUMMARY("summary"),
+    /**
+     * Represents the QualityGateEntity's collection
+     */
+    QUALITY_GATE("qualityGate");
 
     /**
      * The name of the collection.
