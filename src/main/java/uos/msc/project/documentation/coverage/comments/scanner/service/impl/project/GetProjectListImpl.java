@@ -22,7 +22,6 @@ import uos.msc.project.documentation.coverage.comments.scanner.utils.RequestUtil
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
-import java.util.stream.Collectors;
 
 /**
  * Service implementation for the get project list by userID
@@ -71,9 +70,9 @@ public class GetProjectListImpl implements IUseCaseImplementation<
             List<QueryDocumentSnapshot> queryDocumentSnapshotList = querySnapshotApiFuture.get().getDocuments();
             return queryDocumentSnapshotList.stream()
                     .map(data -> data.toObject(ProjectEntity.class))
-                    .collect(Collectors.toList());
+                    .toList();
         } catch (ExecutionException | InterruptedException exception) {
-            throw new InternalServerError("Failed to get review list from Firestore for user id- "+userId+ " :"+exception.getMessage());
+            throw new InternalServerError("Failed to get project list from Firestore for user id- "+userId+ " :"+exception.getMessage());
         }
     }
 

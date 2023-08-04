@@ -10,6 +10,10 @@ import org.springframework.stereotype.Component;
 import uos.msc.project.documentation.coverage.comments.scanner.entity.ProjectEntity;
 import uos.msc.project.documentation.coverage.comments.scanner.enums.CollectionEnums;
 import uos.msc.project.documentation.coverage.comments.scanner.exceptions.InternalServerError;
+import uos.msc.project.documentation.coverage.comments.scanner.utils.JsonUtils;
+
+import java.util.Map;
+import java.util.concurrent.ExecutionException;
 
 /**
  * Data/Repository layer implementation for the project collection
@@ -20,6 +24,7 @@ public class ProjectRepository {
     /**
      * @param projectEntity document object for the project collection
      * @return the id of the document else null
+     * @throws InternalServerError If failed to add the document to Firestore
      */
     public String add(ProjectEntity projectEntity) {
         Firestore firestore = FirestoreClient.getFirestore();
@@ -54,5 +59,21 @@ public class ProjectRepository {
         return databaseReference.whereEqualTo("userId", userId)
                 .orderBy(FieldPath.documentId())
                 .get();
+    }
+
+    /**
+     * @param id ID of the project
+     * @return project entity associated with the ID
+     */
+    public ProjectEntity findById(String id) {
+        Firestore firestore = FirestoreClient.getFirestore();
+        CollectionReference databaseReference  = firestore.collection(CollectionEnums.PROJECT.getCollection());
+        try {
+            ApiFuture<DocumentSnapshot> documentSnapshotApiFuture = databaseReference.document(id).get();
+            Map<String, Object> documentMap = documentSnapshotApiFuture.get().getData();
+            return JsonUtils.toObject(documentMap, ProjectEntity.class);
+        } catch (ExecutionException | InterruptedException exception) {
+            throw new InternalServerError("Failed to get ProjectEntity from Firestore: "+exception.getMessage());
+        }
     }
 }

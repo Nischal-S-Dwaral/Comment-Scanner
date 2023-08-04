@@ -12,7 +12,11 @@ public enum ServiceEnum {
   /**
    * Represents the PROJECT service.
    */
-  PROJECT("project");
+  PROJECT("project"),
+  /**
+   * Represents the SUMMARY service.
+   */
+  SUMMARY("summary");
 
   /**
    * The name of the service.

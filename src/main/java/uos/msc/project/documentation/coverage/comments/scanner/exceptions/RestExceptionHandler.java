@@ -136,6 +136,27 @@ public class RestExceptionHandler {
     }
 
     /**
+     * Handles the InternalServerError exception by returning an ErrorResponse,
+     * with the appropriate status, URL, message, and description.
+     *
+     * @param request The InternalServerError object representing the current request.
+     * @param exception The BadRequest exception that was thrown.
+     * @return An ErrorResponse object containing the error details.
+     */
+    @ResponseStatus(INTERNAL_SERVER_ERROR)
+    @ExceptionHandler(InternalServerError.class)
+    @ResponseBody
+    public ErrorResponse handleInternalServerError(final HttpServletRequest request, final BadRequest exception) {
+        LOG.error("Internal server error ", exception);
+        return ErrorResponse.Builder.anError()
+                .withStatus(BAD_REQUEST.value())
+                .withUrl(request.getRequestURL().toString())
+                .withMessage(CLIENT_ERROR)
+                .withDescription(exception.getMessage())
+                .build();
+    }
+
+    /**
      * Handles the HttpClientErrorException exception by returning an ErrorResponse,
      * with the appropriate status, URL, message, and description.
      *
@@ -372,7 +393,7 @@ public class RestExceptionHandler {
                 .withStatus(INTERNAL_SERVER_ERROR.value())
                 .withUrl(request.getRequestURL().toString())
                 .withMessage(SERVER_ERROR)
-                .withDescription(VAGUE_ERROR_MESSAGE)
+                .withDescription(ex.getMessage())
                 .build();
     }
 

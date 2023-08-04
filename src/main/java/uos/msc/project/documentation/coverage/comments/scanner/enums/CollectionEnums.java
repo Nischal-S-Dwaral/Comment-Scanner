@@ -8,7 +8,23 @@ public enum CollectionEnums {
     /**
      * Represents the ProjectEntity's collection
      */
-    PROJECT("project");
+    PROJECT("project"),
+    /**
+     * Represents the DirectoryEntity's collection
+     */
+    DIRECTORY("directory"),
+    /**
+     * Represents the FileEntity's collection
+     */
+    FILE("file"),
+    /**
+     * Represents the CodeLineEntity's collection
+     */
+    CODE_LINE("codeLine"),
+    /**
+     * Represents the SummaryEntity's collection
+     */
+    SUMMARY("summary");
 
     /**
      * The name of the collection.
