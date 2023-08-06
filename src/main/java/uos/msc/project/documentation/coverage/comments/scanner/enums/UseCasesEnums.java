@@ -31,7 +31,8 @@ public enum UseCasesEnums {
     /**
      * Represents the GET_BY_PROJECT_ID use case
      */
-    GET_BY_PROJECT_ID("getByProjectId");
+    GET_BY_PROJECT_ID("getByProjectId"),
+    GET_PROJECT_CODE_STRUCTURE("getProjectCodeStructure");
 
     /**
      * The name of the use case.
