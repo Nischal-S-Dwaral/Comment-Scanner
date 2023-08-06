@@ -18,6 +18,7 @@ import uos.msc.project.documentation.coverage.comments.scanner.utils.CommonUtils
 import uos.msc.project.documentation.coverage.comments.scanner.utils.ProjectSummaryUtils;
 import uos.msc.project.documentation.coverage.comments.scanner.utils.RequestUtils;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -72,7 +73,7 @@ public class GetSummaryListByProjectIDImpl implements IUseCaseImplementation<
     @Override
     public GetSummaryListResponse postProcess(GetSummaryListProcess getSummaryListProcess) {
 
-        List<SummaryEntity> summaryList = getSummaryListProcess.getSummaryEntities();
+        List<SummaryEntity> summaryList = new ArrayList<>(getSummaryListProcess.getSummaryEntities());
         int latestDifference = 0;
         boolean hasChange = false;
         if (summaryList.size() > 1) {

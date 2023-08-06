@@ -13,6 +13,7 @@ import uos.msc.project.documentation.coverage.comments.scanner.exceptions.Intern
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
 
 /**
  * Data/Repository layer implementation for the codeLine collection
@@ -55,4 +56,25 @@ public class CodeLineRepository {
         return documentIds;
     }
 
+    /**
+     * @param fileId id of the file
+     * @return list of code lines for the file
+     * @throws InternalServerError If failed to get the document list from Firestore
+     */
+    public List<CodeLineEntity> getCodeLines(String fileId) {
+        try {
+            Firestore firestore = FirestoreClient.getFirestore();
+            CollectionReference databaseReference = firestore.collection(CollectionEnums.CODE_LINE.getCollection());
+            ApiFuture<QuerySnapshot> querySnapshotApiFuture = databaseReference.whereEqualTo("fileId", fileId)
+                    .orderBy(FieldPath.documentId())
+                    .get();
+            List<QueryDocumentSnapshot> queryDocumentSnapshotList = querySnapshotApiFuture.get().getDocuments();
+
+            return queryDocumentSnapshotList.stream()
+                    .map(data -> data.toObject(CodeLineEntity.class))
+                    .toList();
+        } catch (ExecutionException | InterruptedException exception) {
+            throw new InternalServerError("Failed to get code list from Firestore for file id- "+fileId+ " :"+exception.getMessage());
+        }
+    }
 }

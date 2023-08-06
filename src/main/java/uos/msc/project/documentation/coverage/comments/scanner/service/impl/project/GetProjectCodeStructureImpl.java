@@ -17,7 +17,7 @@ import uos.msc.project.documentation.coverage.comments.scanner.service.IUseCaseI
 import uos.msc.project.documentation.coverage.comments.scanner.service.UseCasesAdaptorFactory;
 import uos.msc.project.documentation.coverage.comments.scanner.utils.CommonUtils;
 import uos.msc.project.documentation.coverage.comments.scanner.utils.RequestUtils;
-import uos.msc.project.documentation.coverage.comments.scanner.utils.ProjectCodeStructureUtils;
+import uos.msc.project.documentation.coverage.comments.scanner.utils.ProjectCodeUtils;
 
 import java.util.List;
 import java.util.Map;
@@ -65,7 +65,7 @@ public class GetProjectCodeStructureImpl implements IUseCaseImplementation<
 
     @Override
     public GetProjectCodeStructureResponse postProcess(GetProjectCodeStructureProcess getProjectCodeStructureProcess) {
-        return ProjectCodeStructureUtils.getResponse(
+        return ProjectCodeUtils.getResponse(
                 getProjectCodeStructureProcess.getDirectoryEntityList(),
                 getProjectCodeStructureProcess.getFileEntityList()
         );

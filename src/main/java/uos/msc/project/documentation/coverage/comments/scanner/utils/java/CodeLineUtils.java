@@ -14,6 +14,9 @@ import java.util.List;
 
 public class CodeLineUtils {
 
+    /**
+     *TODO: Need to check the code line spaces \t \n etc.
+     */
     public static List<CodeLineEntity> getCodeLines(String fileContent,
                                                     CompilationUnit compilationUnit,
                                                     List<ConvertedParsedInfo> convertedParsedInfoList,
@@ -41,12 +44,15 @@ public class CodeLineUtils {
                 for (Range range : ranges) {
                     if (lineNumber >= range.begin.line && lineNumber <= range.end.line) {
                         boolean lineNumberFound = false;
+                        String alterCodeLine = codeLine
+                                .replaceAll("\t", "<TAB>")
+                                .replaceAll(" ", "<SPACE>");
 
                         for (ConvertedParsedInfo convertedParsedInfo : convertedParsedInfoList) {
                             if (convertedParsedInfo.getLineNumber() == lineNumber) {
                                 CodeLineEntity codeLineEntity = new CodeLineEntity(
                                         lineNumber,
-                                        codeLine,
+                                        alterCodeLine,
                                         true,
                                         convertedParsedInfo.getColour(),
                                         convertedParsedInfo.getComments(),
@@ -60,7 +66,7 @@ public class CodeLineUtils {
                         }
 
                         if (!lineNumberFound) {
-                            codeLineEntityList.add(new CodeLineEntity(lineNumber, codeLine, projectId, fileId));
+                            codeLineEntityList.add(new CodeLineEntity(lineNumber, alterCodeLine, projectId, fileId));
                         }
 
                         break;

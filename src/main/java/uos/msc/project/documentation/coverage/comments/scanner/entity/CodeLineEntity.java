@@ -14,6 +14,8 @@ public class CodeLineEntity {
     private String fileId;
     private String projectId;
 
+    private CodeLineEntity() { }
+
     public CodeLineEntity(int lineNumber, String code, String projectId, String fileId) {
         this.lineNumber = lineNumber;
         this.code = code;

@@ -10,8 +10,10 @@ import org.springframework.stereotype.Component;
 import uos.msc.project.documentation.coverage.comments.scanner.entity.FileEntity;
 import uos.msc.project.documentation.coverage.comments.scanner.enums.CollectionEnums;
 import uos.msc.project.documentation.coverage.comments.scanner.exceptions.InternalServerError;
+import uos.msc.project.documentation.coverage.comments.scanner.utils.JsonUtils;
 
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.ExecutionException;
 
 /**
@@ -66,6 +68,18 @@ public class FileRepository {
                     .toList();
         } catch (ExecutionException | InterruptedException exception) {
             throw new InternalServerError("Failed to get file list from Firestore for project id- "+projectId+ " :"+exception.getMessage());
+        }
+    }
+
+    public FileEntity getFileEntity(String fileId) {
+        Firestore firestore = FirestoreClient.getFirestore();
+        CollectionReference databaseReference  = firestore.collection(CollectionEnums.FILE.getCollection());
+        try {
+            ApiFuture<DocumentSnapshot> documentSnapshotApiFuture = databaseReference.document(fileId).get();
+            Map<String, Object> documentMap = documentSnapshotApiFuture.get().getData();
+            return JsonUtils.toObject(documentMap, FileEntity.class);
+        } catch (ExecutionException | InterruptedException exception) {
+            throw new InternalServerError("Failed to get ProjectEntity from Firestore: "+exception.getMessage());
         }
     }
 }

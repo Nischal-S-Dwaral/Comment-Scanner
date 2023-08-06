@@ -11,7 +11,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class ProjectCodeStructureUtils {
+public class ProjectCodeUtils {
 
     public static GetProjectCodeStructureResponse getResponse(
             List<DirectoryEntity> directoryEntityList, List<FileEntity> fileEntityList) {
