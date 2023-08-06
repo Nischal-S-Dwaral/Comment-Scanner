@@ -17,6 +17,10 @@ public enum UseCasesEnums {
      */
     ADD("add"),
     /**
+     * Represents the UPDATE use case.
+     */
+    UPDATE("update"),
+    /**
      * Represents the GET_LIST use case
      */
     GET_LIST("getList"),
