@@ -1,6 +1,5 @@
 package uos.msc.project.documentation.coverage.comments.scanner.model.summary.get;
 
-import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import uos.msc.project.documentation.coverage.comments.scanner.model.RestApiResponse;
@@ -10,8 +9,19 @@ import java.util.List;
 
 @EqualsAndHashCode(callSuper = true)
 @Data
-@AllArgsConstructor
-public class GetSummaryListByUserIDResponse extends RestApiResponse {
+public class GetSummaryListResponse extends RestApiResponse {
 
     private List<ProjectSummary> projectSummaryList;
+    private boolean hasChange;
+    private boolean isIncrease;
+    private int changePercentage;
+    private int latestCoverage;
+    private String qualityGateResult;
+
+    public GetSummaryListResponse(List<ProjectSummary> projectSummaryList) {
+        this.projectSummaryList = projectSummaryList;
+    }
+
+    public GetSummaryListResponse() {
+    }
 }

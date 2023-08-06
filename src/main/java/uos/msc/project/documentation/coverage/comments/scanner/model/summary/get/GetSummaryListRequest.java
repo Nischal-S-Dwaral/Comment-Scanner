@@ -5,8 +5,8 @@ import lombok.Data;
 
 @Data
 @AllArgsConstructor
-public class GetSummaryListByUserIDRequest {
+public class GetSummaryListRequest {
 
-    private String userID;
+    private String id;
     private String qualityGate;
 }

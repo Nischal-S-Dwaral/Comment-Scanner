@@ -2,11 +2,10 @@ package uos.msc.project.documentation.coverage.comments.scanner.utils;
 
 import uos.msc.project.documentation.coverage.comments.scanner.entity.SummaryEntity;
 import uos.msc.project.documentation.coverage.comments.scanner.model.summary.ProjectSummary;
+import uos.msc.project.documentation.coverage.comments.scanner.model.summary.get.GetSummaryListResponse;
 
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 public class ProjectSummaryUtils {
 
@@ -50,6 +49,27 @@ public class ProjectSummaryUtils {
             e.printStackTrace();
             return timestampString;
         }
+    }
+
+    public static void sortEntitiesByTimestampDescending(List<SummaryEntity> entities) {
+        entities.sort((entity1, entity2) -> entity2.getTimestamp().compareTo(entity1.getTimestamp()));
+    }
+
+    public static GetSummaryListResponse getSummaryListResponse(List<SummaryEntity> summaryEntities, int qualityGate,
+                                                                int latestDifference, boolean hasChange) {
+
+        GetSummaryListResponse response = new GetSummaryListResponse();
+        response.setProjectSummaryList(convertSummaryEntities(summaryEntities, qualityGate));
+        response.setLatestCoverage(summaryEntities.get(0).getPercentage());
+        response.setQualityGateResult(getQualityGatePass(summaryEntities.get(0).getPercentage(), qualityGate));
+
+        if (hasChange) {
+            response.setHasChange(true);
+            response.setIncrease(latestDifference > 0);
+            response.setChangePercentage(Math.abs(latestDifference));
+        }
+
+        return response;
     }
 }
 

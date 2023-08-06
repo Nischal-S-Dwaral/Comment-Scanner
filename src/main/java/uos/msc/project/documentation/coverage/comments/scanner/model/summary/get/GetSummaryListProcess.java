@@ -8,7 +8,7 @@ import java.util.List;
 
 @Data
 @AllArgsConstructor
-public class GetSummaryListByUserIDProcess {
+public class GetSummaryListProcess {
 
     private List<SummaryEntity> summaryEntities;
     private int qualityGate;

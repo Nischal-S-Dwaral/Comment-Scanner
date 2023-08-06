@@ -9,8 +9,8 @@ import uos.msc.project.documentation.coverage.comments.scanner.enums.ServiceEnum
 import uos.msc.project.documentation.coverage.comments.scanner.enums.UseCasesEnums;
 import uos.msc.project.documentation.coverage.comments.scanner.exceptions.BadRequest;
 import uos.msc.project.documentation.coverage.comments.scanner.model.summary.get.GetSummaryListProcess;
-import uos.msc.project.documentation.coverage.comments.scanner.model.summary.get.GetSummaryListResponse;
 import uos.msc.project.documentation.coverage.comments.scanner.model.summary.get.GetSummaryListRequest;
+import uos.msc.project.documentation.coverage.comments.scanner.model.summary.get.GetSummaryListResponse;
 import uos.msc.project.documentation.coverage.comments.scanner.repository.SummaryRepository;
 import uos.msc.project.documentation.coverage.comments.scanner.service.IUseCaseImplementation;
 import uos.msc.project.documentation.coverage.comments.scanner.service.UseCasesAdaptorFactory;
@@ -18,16 +18,15 @@ import uos.msc.project.documentation.coverage.comments.scanner.utils.CommonUtils
 import uos.msc.project.documentation.coverage.comments.scanner.utils.ProjectSummaryUtils;
 import uos.msc.project.documentation.coverage.comments.scanner.utils.RequestUtils;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 /**
- * Service implementation for the getting list of summaries of the user
+ * Service implementation for the getting list of summaries of the project
  */
 @Service
 @Slf4j
-public class GetSummaryListByUserIDImpl implements IUseCaseImplementation<
+public class GetSummaryListByProjectIDImpl implements IUseCaseImplementation<
         GetSummaryListRequest, GetSummaryListProcess, GetSummaryListResponse> {
 
     /**
@@ -35,7 +34,7 @@ public class GetSummaryListByUserIDImpl implements IUseCaseImplementation<
      */
     private final SummaryRepository summaryRepository;
 
-    public GetSummaryListByUserIDImpl(SummaryRepository summaryRepository) {
+    public GetSummaryListByProjectIDImpl(SummaryRepository summaryRepository) {
         this.summaryRepository = summaryRepository;
     }
 
@@ -45,48 +44,45 @@ public class GetSummaryListByUserIDImpl implements IUseCaseImplementation<
     @PostConstruct
     public void init() {
         UseCasesAdaptorFactory.
-                registerAdaptor(ServiceEnum.SUMMARY, UseCasesEnums.GET_BY_USER_ID, this);
+                registerAdaptor(ServiceEnum.SUMMARY, UseCasesEnums.GET_BY_PROJECT_ID, this);
     }
 
     @Override
     public GetSummaryListRequest preProcess(HttpServletRequest request) {
         Map<String, String> queryParams = RequestUtils.getQueryParams(request);
-        String userId = queryParams.get("userId");
+        String projectId = queryParams.get("projectId");
         String qualityGate = queryParams.get("qualityGate");
-        if (!CommonUtils.checkIfObjectIsNotNull(userId)) {
-            throw new BadRequest("User ID is required");
+        if (!CommonUtils.checkIfObjectIsNotNull(projectId)) {
+            throw new BadRequest("Project ID is required");
         }
         if (!CommonUtils.checkIfObjectIsNotNull(qualityGate)) {
             throw new BadRequest("Quality Gate is required");
         }
-        return new GetSummaryListRequest(userId, qualityGate);
+        return new GetSummaryListRequest(projectId, qualityGate);
     }
 
     @Override
     public GetSummaryListProcess process(GetSummaryListRequest summaryListRequest) {
-        List<SummaryEntity> summaryEntityList = summaryRepository.getByUserId(summaryListRequest.getId());
+        List<SummaryEntity> summaryEntityList = summaryRepository.getByProjectId(summaryListRequest.getId());
 
         return new GetSummaryListProcess(summaryEntityList,
                 Integer.parseInt(summaryListRequest.getQualityGate()));
     }
 
     @Override
-    public GetSummaryListResponse postProcess(GetSummaryListProcess process) {
-        Map<String, SummaryEntity> latestEntriesMap = new HashMap<>();
+    public GetSummaryListResponse postProcess(GetSummaryListProcess getSummaryListProcess) {
 
-        for (SummaryEntity entity : process.getSummaryEntities()) {
-            String repository = entity.getRepository();
-
-            if (!latestEntriesMap.containsKey(repository) ||
-                    entity.getTimestamp().compareTo(latestEntriesMap.get(repository).getTimestamp()) > 0) {
-                latestEntriesMap.put(repository, entity);
-            }
+        List<SummaryEntity> summaryList = getSummaryListProcess.getSummaryEntities();
+        int latestDifference = 0;
+        boolean hasChange = false;
+        if (summaryList.size() > 1) {
+            ProjectSummaryUtils.sortEntitiesByTimestampDescending(summaryList);
+            latestDifference = summaryList.get(0).getPercentage() - summaryList.get(1).getPercentage();
+            hasChange = true;
         }
 
-        List<SummaryEntity> filteredSummaryList = latestEntriesMap.values().stream().toList();
-
-        return new GetSummaryListResponse(ProjectSummaryUtils.convertSummaryEntities(
-                filteredSummaryList, process.getQualityGate()
-        ));
+        return ProjectSummaryUtils.getSummaryListResponse(
+                summaryList, getSummaryListProcess.getQualityGate(), latestDifference, hasChange
+        );
     }
 }
