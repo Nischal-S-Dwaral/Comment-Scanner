@@ -13,6 +13,7 @@ import uos.msc.project.documentation.coverage.comments.scanner.exceptions.Intern
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 
 /**
@@ -76,5 +77,42 @@ public class CodeLineRepository {
         } catch (ExecutionException | InterruptedException exception) {
             throw new InternalServerError("Failed to get code list from Firestore for file id- "+fileId+ " :"+exception.getMessage());
         }
+    }
+
+    public CompletableFuture<Boolean> deleteDocumentsByProjectIdInBatch(String projectId) {
+        return CompletableFuture.supplyAsync(() -> {
+            try {
+                Firestore firestore = FirestoreClient.getFirestore();
+                CollectionReference collectionReference = firestore.collection(CollectionEnums.CODE_LINE.getCollection());
+
+                Query query = collectionReference.whereEqualTo("projectId", projectId);
+                ApiFuture<QuerySnapshot> querySnapshot = query.get();
+
+                List<CompletableFuture<Boolean>> deleteFutures = querySnapshot.get().getDocuments()
+                        .stream()
+                        .map(this::deleteDocumentAsync)
+                        .toList();
+
+                CompletableFuture<Void> allOf = CompletableFuture.allOf(deleteFutures.toArray(new CompletableFuture[0]));
+                allOf.get();
+
+                return deleteFutures.stream()
+                        .allMatch(CompletableFuture::join);
+
+            } catch (ExecutionException | InterruptedException exception) {
+                throw new InternalServerError("Failed to delete from Firestore for project id- "+projectId+ " :"+exception.getMessage());
+            }
+        }).thenApply(result -> result);
+    }
+
+    private CompletableFuture<Boolean> deleteDocumentAsync(QueryDocumentSnapshot document) {
+        return CompletableFuture.supplyAsync(() -> {
+            try {
+                document.getReference().delete();
+                return true;
+            } catch (FirestoreException e) {
+                return false;
+            }
+        });
     }
 }

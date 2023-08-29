@@ -13,6 +13,10 @@ public enum UseCasesEnums {
      */
     ADD_SPRING_BOOT("addSpringBoot"),
     /**
+     * Represents the ADD_SPRING_BOOT use case.
+     */
+    UPDATE_SPRING_BOOT("updateSpringBoot"),
+    /**
      * Represents the ADD use case.
      */
     ADD("add"),
