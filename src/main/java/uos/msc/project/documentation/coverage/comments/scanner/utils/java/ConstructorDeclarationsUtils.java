@@ -45,11 +45,12 @@ public class ConstructorDeclarationsUtils {
             parsingInfo.setJavadocEndLine(javadocInfo.getEndLine());
 
             List<String> reviewComments = new ArrayList<>();
-            AtomicInteger score = new AtomicInteger(1);
+            AtomicInteger score = new AtomicInteger(0);
 
             if (javadocInfo.getDescription().isEmpty()) {
                 reviewComments.add("Missing description for Javadoc of the constructor");
-                score.getAndDecrement();
+            } else {
+                score.getAndIncrement();
             }
 
             IntermediateValidationResult intermediateValidationResult = CommonJavadocUtils.validateParametersDocumentation(
@@ -59,8 +60,13 @@ public class ConstructorDeclarationsUtils {
             reviewComments.addAll(intermediateValidationResult.getReviewComment());
 
             parsingInfo.setDocumentationReviewComments(reviewComments);
-            parsingInfo.setJavadocScore(
-                    (score.get() + intermediateValidationResult.getScore()) / 2);
+
+            if (constructorDeclaration.getParameters().isEmpty()) {
+                parsingInfo.setJavadocScore(score.get());
+            } else {
+                parsingInfo.setJavadocScore(
+                        (score.get() + intermediateValidationResult.getScore()) / 2);
+            }
         } else {
             parsingInfo.setDocumentationReviewComments(List.of("Missing documentation for constructor"));
             parsingInfo.setJavadocScore(0);
