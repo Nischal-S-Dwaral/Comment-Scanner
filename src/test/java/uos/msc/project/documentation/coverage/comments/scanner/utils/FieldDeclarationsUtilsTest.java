@@ -86,7 +86,7 @@ public class FieldDeclarationsUtilsTest {
     }
 
     @Test
-    void testParse_FieldWithGoodJavadoc() {
+    void testParse_FieldWithGoodJavadoc_Description() {
         when(compilationUnitMock.findAll(FieldDeclaration.class)).thenReturn(List.of(fieldDeclarationMock));
         NodeList<VariableDeclarator> variableDeclarators = new NodeList<>();
         variableDeclarators.add(variableDeclaratorMock);
@@ -113,7 +113,7 @@ public class FieldDeclarationsUtilsTest {
     }
 
     @Test
-    void testParse_FieldWithBadJavadoc() {
+    void testParse_FieldWithBadJavadoc_EmptyDescription() {
         when(compilationUnitMock.findAll(FieldDeclaration.class)).thenReturn(List.of(fieldDeclarationMock));
         NodeList<VariableDeclarator> variableDeclarators = new NodeList<>();
         variableDeclarators.add(variableDeclaratorMock);

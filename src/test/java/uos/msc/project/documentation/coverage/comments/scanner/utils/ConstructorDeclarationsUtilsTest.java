@@ -63,7 +63,7 @@ public class ConstructorDeclarationsUtilsTest {
     }
 
     @Test
-    void testParse_ConstructorWithJavadocNoParameters() {
+    void testParse_ConstructorWithGoodJavadoc_Description() {
         when(compilationUnitMock.findAll(ConstructorDeclaration.class)).thenReturn(List.of(constructorDeclarationMock));
         when(constructorDeclarationMock.getNameAsString()).thenReturn("MyConstructor");
 
@@ -94,7 +94,7 @@ public class ConstructorDeclarationsUtilsTest {
     }
 
     @Test
-    void testParse_ConstructorWithOutJavadocNoParameters() {
+    void testParse_ConstructorWithBadJavadoc_EmptyDescription() {
         when(compilationUnitMock.findAll(ConstructorDeclaration.class)).thenReturn(List.of(constructorDeclarationMock));
         when(constructorDeclarationMock.getNameAsString()).thenReturn("MyConstructor");
 
@@ -125,7 +125,7 @@ public class ConstructorDeclarationsUtilsTest {
     }
 
     @Test
-    void testParse_ParametersConstructorWithJavadoc() {
+    void testParse_ParametersConstructorWithGoodJavadoc_ParamsDescription() {
         when(compilationUnitMock.findAll(ConstructorDeclaration.class)).thenReturn(List.of(constructorDeclarationMock));
         when(constructorDeclarationMock.getNameAsString()).thenReturn("MyConstructor");
 
@@ -158,7 +158,7 @@ public class ConstructorDeclarationsUtilsTest {
     }
 
     @Test
-    void testParse_ParametersConstructorWithoutParameterJavadoc() {
+    void testParse_ParametersConstructorWithBadJavadoc_EmptyParamsDescription() {
         when(compilationUnitMock.findAll(ConstructorDeclaration.class)).thenReturn(List.of(constructorDeclarationMock));
         when(constructorDeclarationMock.getNameAsString()).thenReturn("MyConstructor");
 
@@ -182,7 +182,6 @@ public class ConstructorDeclarationsUtilsTest {
 
         when(CommonJavadocUtils.validateParametersDocumentation(
                 anyList(), any())).thenReturn(intermediateValidationResultMock);
-
 
         List<ParsingInfo> parsingInfoList = ConstructorDeclarationsUtils.parse(compilationUnitMock);
 
